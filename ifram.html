@@ -1,5 +1,37 @@
 <body>
  TEST IFRAME 
+ 
+<div id="result">
+        <section id="main">
+
+      保存するKey：<input id="textkey" type="text" />
+
+      保存する値：<input id="textdata" type="text" />
+
+      <button id="button" onclick="setlocalStorage()">保存</button>
+
+      <button id="button" onclick="removeStorage()">削除</button>
+
+      <button id="button" onclick="removeallStorage()">全て削除</button>
+
+      <button id="button" onclick="ListStorage()">保存数</button>
+
+    <table border="1">
+
+      <tr>
+
+        <th>キー</th><th>値</th>
+
+      </tr>
+
+      <tbody id="list">
+
+      </tbody>
+
+    </table>
+
+        </section>
+</div>
   <script>
     (function() {
       var origin = 'https://tama.tok.access-company.com';
@@ -25,5 +57,143 @@ console.log("iframe set !!!!!!!!!!!!!!!!");
         }
       });
     })();
+   
+// ①Web Storageの実装確認
+
+if (typeof localStorage === 'undefined') {
+
+    window.alert("このブラウザはWeb Storage機能が実装されていません");
+
+}else{
+
+
+  var storage = localStorage;
+
+
+
+  // ③localStorageへの格納
+
+  function setlocalStorage() {
+
+    var key = document.getElementById("textkey").value;
+
+    var value = document.getElementById("textdata").value;
+
+
+
+    // 値の入力チェック
+
+    if (key && value) {
+
+      storage.setItem(key, JSON.stringify(value));
+
+    }
+
+
+
+    // 変数の初期化
+
+    key = "";
+
+    value = "";
+
+
+
+    viewStorage();
+
+  }
+
+
+
+  // ③localStorageからのデータの取得と表示
+
+  function viewStorage() {
+
+    var list = document.getElementById("list")
+
+    while (list.firstChild) list.removeChild(list.firstChild);
+
+
+
+    // localStorageすべての情報の取得
+
+    for (var i=0; i < storage.length; i++) {
+
+      var _key = storage.key(i);
+
+
+
+      // localStorageのキーと値を表示
+
+      var tr = document.createElement("tr");
+
+      var td1 = document.createElement("td");
+
+      var td2 = document.createElement("td");
+
+      list.appendChild(tr);
+
+      tr.appendChild(td1);
+
+      tr.appendChild(td2);
+
+      td1.innerHTML = _key;
+
+      td2.innerHTML = JSON.parse(storage.getItem(_key));
+
+    }
+
+  }
+
+
+
+  // ④localStorageから削除
+
+  function removeStorage() {
+
+    var key = document.getElementById("textkey").value;
+
+
+
+    storage.removeItem(key);
+
+
+
+    // 変数の初期化
+
+    key = "";
+
+
+
+    viewStorage();
+
+  }
+
+
+
+  // ⑤localStorageからすべて削除
+
+  function removeallStorage() {
+
+    storage.clear();
+
+    viewStorage();
+
+  }
+
+
+  // ⑥localStorageから一覧表示
+
+  function ListStorage() {
+
+    len = storage.length;
+
+    window.alert(len);
+
+  }
+
+
+
+}
   </script>
 </body>
